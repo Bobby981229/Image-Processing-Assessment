@@ -174,7 +174,6 @@ J = im2bw(I, T);
 
 figure, imshow(J);
 
-
 % T = graythresh(fo);                          % 自动获取阈值
 % T = T * 205;                                  % 阈值在区间[0,1]，需调整至[0,255]
 % g = imageGray<=T;
