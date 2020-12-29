@@ -25,43 +25,39 @@ title('Plot Histogram by histeq')
 % Step-5: Enhance image before binarisation
 % Contrast Adjustment
 
-% img_enhance = imadjust(imageResize);
-% figure, imshow(img_enhance)
-% title('Enhance Image by imadjust')
+img_enhance = imadjust(imageResize);
+figure, imshow(img_enhance)
+title('Enhance Image by imadjust')
 
-I = double(imageResize);
-noise_img = (I - 85) * 255 / 75;
-row = size(I, 1);
-col = size(I, 2);
-
-for i = 1 : row
-    for j = 1: col
-        if noise_img(i, j) < 0
-            noise_img(i, j) = 0;
-        end
-        
-        if noise_img(i, j) > 255
-            noise_img(i, j) = 255;
-        end
-    end
-end
-
-img_enhance1 = uint8(noise_img);
-figure, imshow(img_enhance1);
-
-img_enhance2 = imadjust(imageResize, [0.4 0.9], [0 1], 1.5);
-figure, imshow(img_enhance2)
-title('Enhance Image by imadjust2')
+% I = double(imageResize);
+% noise_img = (I - 85) * 255 / 75;
+% row = size(I, 1);
+% col = size(I, 2);
+% 
+% for i = 1 : row
+%     for j = 1: col
+%         if noise_img(i, j) < 0
+%             noise_img(i, j) = 0;
+%         end
+%         
+%         if noise_img(i, j) > 255
+%             noise_img(i, j) = 255;
+%         end
+%     end
+% end
+% 
+% img_enhance1 = uint8(noise_img);
+% figure, imshow(img_enhance1);
 
 
 % Step-6: Histogram after enhancement
-img_enhanceHist = img_enhance2(:,:,1);
+img_enhanceHist = img_enhance(:,:,1);
 imhist(img_enhanceHist);  % Plot the histogram
 title('Histogram after Enhancement')
 
 
 % Step-7: Image Binarisation
-image_Binarization = imbinarize(img_enhance2, 0.16);       %对图像二值化
+image_Binarization = imbinarize(img_enhance, 0.16);       %对图像二值化
 figure, imshow(image_Binarization)
 title('Binary Version of Image')
 
@@ -77,16 +73,14 @@ title('Binary Version of Image')
 
 
 img = imageResize;
-imshow(img);
-[m n] = size(img);
+[m, n] = size(img);
 img=double(img);
 
 %%canny边缘检测的前两步相对不复杂，所以我就直接调用系统函数了
 %%高斯滤波
 w=fspecial('gaussian',[5 5]);
 img=imfilter(img,w,'replicate');
-figure;
-imshow(uint8(img))
+% figure, imshow(uint8(img))
 
 %%sobel边缘检测
 w=fspecial('sobel');
@@ -94,8 +88,7 @@ img_w=imfilter(img,w,'replicate');      %求横边缘
 w=w';
 img_h=imfilter(img,w,'replicate');      %求竖边缘
 img=sqrt(img_w.^2+img_h.^2);        %注意这里不是简单的求平均，而是平方和在开方。我曾经好长一段时间都搞错了
-figure;
-imshow(uint8(img))
+% figure, imshow(uint8(img))
 
 %%下面是非极大抑制
 new_edge=zeros(m,n);
@@ -125,11 +118,11 @@ for i=2:m-1
         end
     end
 end
-figure, imshow(uint8(new_edge))
+% figure, imshow(uint8(new_edge))
 
 %%下面是滞后阈值处理
 up = 80;     %上阈值
-low = 50;    %下阈值
+low = 55;    %下阈值
 set(0,'RecursionLimit',10000);  %设置最大递归深度
 for i=1:m
     for j=1:n
