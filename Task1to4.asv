@@ -49,11 +49,11 @@ title('Edge Detection');
 % Morphologically close image
 se = strel('disk', 3'); % Disc-shaped structural elements
 image_close = imclose(img_edge, se);
-% figure, imshow(image_close), title('Close Image');
+% figure, imshow(foc), title('Close Image');
 
 % Fill image regions and holes-
 image_filled = imfill(image_close, 'holes');
-% figure, imshow(image_filled), title('Filled Image');
+% figure, imshow(image_fill), title('Filled Image');
 
 % Morphologically open image
 se = strel('disk', 1'); % Disc-shaped structural elements
@@ -67,7 +67,7 @@ title('Segmentation Image');
 %% Task 4: Object Recognition --------------------
 
 figure, imshow(image_open)
-title('Circular Recognition');
+title('RecognitionC');
 hold on
 [centersBright,radiiBright,metricBright] = imfindcircles(image_open, [20 25], ...
     'ObjectPolarity', 'bright', 'Sensitivity', 0.95, 'EdgeThreshold', 0.1);
@@ -79,8 +79,7 @@ hold off
 
 L = bwlabel(image_seg);
 s = regionprops(L, 'Centroid');
-figure, imshow(image_seg)
-title('Label the Objects');
+imshow(image_seg)
 hold on
 for k = 1:numel(s)
     c = s(k).Centroid;
