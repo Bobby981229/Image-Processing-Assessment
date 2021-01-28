@@ -16,20 +16,19 @@ else
     metric = metric(1);
 end
 % preprocess data
-x=x( : );
-y=y( : );
-% not many error checks to worry about
+x = x( : );
+y = y( : );
 n = length(x);
-if n~=length(y)
+if n ~= length(y)
     error 'x and y must be the same sizes'
 end
-if n>3
+if n > 3
     edges = convhull(x, y);
     x = x(edges);
     y = y(edges);
     % probably fewer points now, unless the points are fully convex
     nedges = length(x) - 1;
-elseif n>1
+elseif n > 1
     % n must be 2 or 3
     nedges = n;
     x(end + 1) = x(1);
@@ -41,21 +40,21 @@ end
 % find the bounding rectangle
 switch nedges
     case 0
-        % empty begets empty
+        % empty
         rectx = [];
         recty = [];
         area = [];
         perimeter = [];
         return
     case 1
-        % with one point, the rect is simple.
+        % with one point
         rectx = repmat(x, 1, 5);
         recty = repmat(y, 1, 5);
         area = 0;
         perimeter = 0;
         return
     case 2
-        % only two points. also simple.
+        % only two points
         rectx = x([1 2 2 1 1]);
         recty = y([1 2 2 1 1]);
         area = 0;
@@ -83,9 +82,9 @@ for i = 1 : nang
     xymin = min(xyr, [], 1);
     xymax = max(xyr, [], 1);
     
-    % The area is simple, as is the perimeter
+    % The area and the perimeter
     A_i = prod(xymax - xymin);
-    P_i = 2*sum(xymax - xymin);
+    P_i = 2 * sum(xymax - xymin);
     
     if metric=='a'
         M_i = A_i;
@@ -93,16 +92,16 @@ for i = 1 : nang
         M_i = P_i;
     end
     
-    % new metric value for the current interval. Is it better?
+    % new metric value for the current interval
     if M_i < met
         % keep this one
         met = M_i;
         area = A_i;
-        perimeter = P_i; 
-        rect = [xymin; [xymax(1) ,xymin(2)]; xymax; [xymin(1), xymax(2)]; xymin];
+        perimeter = P_i;
+        rect = [xymin; [xymax(1), xymin(2)]; xymax; [xymin(1), xymax(2)]; xymin];
         rect = rect * rot';
         rectx = rect( : , 1);
         recty = rect( : , 2);
     end
 end
-end % mainline end
+end

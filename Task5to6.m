@@ -2,7 +2,7 @@ clc; clear; close all;
 
 %% Task 5: Robust method --------------------------
 % Step-1: Load input image
-imageOriginal = imread('IMG_06.jpg');
+imageOriginal = imread('IMG_07.jpg');
 figure, imshow(imageOriginal)
 title('Load Original Image');
 
@@ -33,7 +33,7 @@ img_enhanceHist = img_enhance(:,:,1);
 imhist(img_enhanceHist);  % Plot the histogram
 title('Histogram after Enhancement')
 
-% Step-7: Image Binarisation
+% Step-7: Image Binarization
 image_Binarization = imbinarize(img_enhance, 0.26); % Image binarisation operations
 figure, imshow(image_Binarization)
 title('Binary Version of Image')
@@ -41,7 +41,7 @@ title('Binary Version of Image')
 
 % Step-8: Edge detection ------------------------
 % Detect edges in an image using the Canny edge detector
-img_edge = edge(img_enhance,'canny', [0.03, 0.17], 0.7); % The parameters of the threshold matrix can be adjusted
+img_edge = edge(img_enhance,'canny', [0.03, 0.17], 0.9); % The parameters of the threshold matrix can be adjusted
 figure, imshow(img_edge);
 title('Edge Detection');
 close all;
@@ -63,7 +63,7 @@ image_open = imopen(image_filled, se);
 image_seg = image_open;
 figure, imshow(image_seg);
 title('Segmentation Image');
-
+close all;
 
 % Object Recognition --------------------
 [B, L] = bwboundaries(image_seg, 'noholes'); % Trace region boundaries
@@ -73,7 +73,7 @@ for i = 1 : length(B)
     temp(temp == i) = 1;
     [r, c] = find(temp == 1);   
     % 'a' is the smallest rectangle by area, if by side length use 'p'.
-    [rectx, recty ,area , perimeter] = minboundrect(c, r, 'a');
+    [rectx, recty, area, perimeter] = minboundrect(c, r, 'a');
 %     figure,imshow(temp);
 %     line(rectx(:),recty(:),'color','r');
     ratio = length_width_ratio(rectx, recty);
@@ -92,11 +92,23 @@ title('Object Recognition');
 
 
 %% Task 6: Performance evaluation -----------------
-% Step 1: Load ground truth data
+% Load ground truth data
 GT = imread("IMG_07_GT.png");
-
-% To visualise the ground truth image, you can
-% use the following code.
 L_GT = label2rgb(GT, 'prism','k','shuffle');
-figure, imshow(L_GT)
+LGT_gray = im2gray(L_GT);  % Converting RGB images to grayscale
+LGT_bin = imbinarize(LGT_gray);  % Binarization process
+
+I = im2gray(L); % Converting RGB images to grayscale
+mask = false(size(I));
+mask(25 : end - 25, 25 : end - 25) = true;
+BW = activecontour(I, mask, 2500);  % 2500 iterations for segmentation
+figure, imshow(BW)  % Display of the active contour segmentation
+title('Activecontour Segmentation Image')
+
+% Computes the Dice similarity coefficient between binary images
+similarity = dice(BW, LGT_bin);
+figure, imshowpair(BW, LGT_bin)
+title(['Dice Index = ' num2str(similarity)])
+
+
 

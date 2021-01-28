@@ -3,13 +3,13 @@ clc; clear; close all;
 %% Task 1: Pre-processing -----------------------
 % Step-1: Load input image
 imageOriginal = imread('IMG_01.jpg');
-figure, imshow(imageOriginal)
-title('Load Original Image');
+% figure, imshow(imageOriginal)
+% title('Load Original Image');
 
 % Step-2: Covert image to grayscale
 imageGray = rgb2gray(imageOriginal);
-figure, imshow(imageGray)
-title('Covert Image to Grayscale');
+% figure, imshow(imageGray)
+% title('Covert Image to Grayscale');
 
 % Step-3: Rescale image
 % Reduce the size by half
@@ -73,7 +73,6 @@ hold off
 
 L = bwlabel(image_seg); %  Returns the label matrix L
 s = regionprops(L, 'Centroid');
-figure, imshow(image_seg)
 title('Label the Objects');
 hold on
 for k = 1:numel(s)
@@ -89,8 +88,5 @@ L(ismember(L, nonCircula_Matrix)) = 1;
 L(ismember(L, circular_Matrix)) = 5;
 figure, imshow(label2rgb(L, @jet, 'k'));
 title('Object Recognition');
-
-
-
 
 
